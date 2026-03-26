@@ -7,7 +7,6 @@
 An AI-powered tutor built on Claude Code that teaches you any AI/ML repository — concept by concept, in your language, at your pace. No more skimming READMEs and hoping for the best.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-blueviolet)](https://claude.ai/code)
 [![Status: Beta](https://img.shields.io/badge/Status-Beta-orange)](https://github.com)
 
 [Getting Started](#-getting-started) · [How It Works](#-how-it-works) · [Features](#-features) · [Architecture](#-architecture) · [Contributing](#-contributing)
@@ -150,7 +149,7 @@ All state is saved in plain markdown files — human-readable, version-controlla
 
 ## 🏗️ Architecture
 
-The agent is built as a multi-agent system inside Claude Code:
+The agent is built as a multi-agent system:
 
 ```
 CLAUDE.md (orchestrator)
@@ -244,6 +243,6 @@ MIT — do whatever you want with it.
 
 <div align="center">
 
-Built with [Claude Code](https://claude.ai/code) · Made for developers who want to actually understand what they're using
+Made for developers who want to actually understand what they're using
 
 </div>
