@@ -91,9 +91,9 @@ Agent: [analyzes repo structure and key files]
 
        What language should I explain things in?
 
-You: Russian
+You: English
 
-Agent: Отлично! How would you rate your experience level?
+Agent: Got it! How would you rate your experience level?
        (beginner / intermediate / advanced)
 
 You: intermediate
@@ -111,7 +111,7 @@ You: When you want to read a file but filter out noise for the AI context?
 Agent: ✅ Exactly right. Progress: 1/7 concepts (14%)
        Moving to Module 2 — The 6-Phase Command Lifecycle...
 
-You: стоп
+You: stop
 
 Agent: [saves all progress to .tutor/repos/rtk-ai--rtk/]
 
@@ -217,7 +217,7 @@ The tutor pauses, answers, then resumes exactly where you left off.
 
 **End a session:**
 ```
-стоп / stop / bye / hasta mañana / 再见
+stop / bye / стоп / hasta mañana / 再见
 ```
 All progress is saved before the agent says goodbye.
 
