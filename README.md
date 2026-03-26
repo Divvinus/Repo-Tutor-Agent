@@ -11,6 +11,12 @@ An AI-powered tutor built on Claude Code that teaches you any AI/ML repository �
 
 [Getting Started](#-getting-started) · [How It Works](#-how-it-works) · [Features](#-features) · [Architecture](#-architecture) · [Contributing](#-contributing)
 
+---
+
+[![Telegram](https://img.shields.io/badge/Telegram-@divinus__ai-2CA5E0?logo=telegram&logoColor=white)](https://t.me/divinus_ai)
+[![YouTube](https://img.shields.io/badge/YouTube-@divinus__ai-FF0000?logo=youtube&logoColor=white)](https://www.youtube.com/@divinus_ai)
+[![X](https://img.shields.io/badge/X-@divvinus-000000?logo=x&logoColor=white)](https://x.com/divvinus)
+
 </div>
 
 ---
@@ -244,5 +250,7 @@ MIT — do whatever you want with it.
 <div align="center">
 
 Made for developers who want to actually understand what they're using
+
+**Author:** [@divinus_py](https://t.me/divinus_py) · [@divinus_ai](https://t.me/divinus_ai) · [@divvinus](https://x.com/divvinus) · [YouTube](https://www.youtube.com/@divinus_ai)
 
 </div>
