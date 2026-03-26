@@ -1,73 +1,249 @@
-# Repo Tutor Agent
+<div align="center">
 
-**Drop a GitHub repo link. Learn it completely.**
+# 🎓 Repo Tutor Agent
 
-An AI tutor that breaks down any AI/ML GitHub repository into digestible concepts and teaches them to you one by one — at your pace, in your language, with real code references. No more skimming READMEs and hoping for the best.
+**Drop a GitHub repo link. Understand it completely.**
 
-## Who is this for?
+An AI-powered tutor built on Claude Code that teaches you any AI/ML repository — concept by concept, in your language, at your pace. No more skimming READMEs and hoping for the best.
 
-Developers entering the AI tools ecosystem who want to deeply understand repos rather than just copy-paste from them. Whether you're exploring your first MCP server or diving into a multi-agent framework, this agent meets you where you are.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-blueviolet)](https://claude.ai/code)
+[![Status: Beta](https://img.shields.io/badge/Status-Beta-orange)](https://github.com)
 
-## How to use
+[Getting Started](#-getting-started) · [How It Works](#-how-it-works) · [Features](#-features) · [Architecture](#-architecture) · [Contributing](#-contributing)
 
-1. Install the [Claude Code extension](https://marketplace.visualstudio.com/items?itemName=anthropics.claude-code) in VS Code
-2. Clone this repo or copy `CLAUDE.md` into your project root
-3. Open Claude Code and type:
-   ```
-   learning https://github.com/owner/repo
-   ```
-4. The agent handles everything else
+</div>
 
-## What happens during a session
+---
 
-- The repo is analyzed and broken into an ordered concept map
-- You're asked about your experience level and preferred language
-- Concepts are presented one at a time, analogy first, then code
-- A quick question checks your understanding before moving on
-- If something doesn't click, the explanation adapts automatically
-- Progress is saved so you can pick up exactly where you left off
+## 🧠 What Is This?
 
-## State files
+**Repo Tutor Agent** is a Claude Code agent that acts as your personal AI tutor for any AI/ML GitHub repository.
 
-The agent stores session state in a `.tutor/` directory:
+You paste a link. The agent reads the entire repo, builds a personalized learning path, and walks you through it one concept at a time — asking questions to make sure you actually understand before moving on.
+
+It's not a chatbot. It's a structured learning system that:
+- Adapts to your **experience level** (beginner / intermediate / advanced)
+- Teaches in your **native language** (Russian, Spanish, Chinese, any language)
+- **Saves your progress** between sessions so you never lose your place
+- Tracks what you **struggle with** and adjusts automatically
+
+> Built for developers entering the AI tools ecosystem who want to *understand* repos — not just copy-paste from them.
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---|---|
+| 🔍 **Auto Repo Analysis** | Reads README, structure, and key files to build an ordered learning path |
+| 🗺️ **Concept Map** | Breaks any repo into 5–7 modules, prerequisites first |
+| 🌍 **Multilingual** | Explains in your language, keeps technical terms in English |
+| 🎯 **Adaptive Level** | Beginner gets analogies. Advanced gets tradeoffs and edge cases |
+| ❓ **Understanding Checks** | Asks one question per concept. Won't move on until you get it |
+| 🔄 **Difficulty Adjuster** | 5 different strategies to re-explain when something doesn't click |
+| 💬 **Live Q&A** | Ask anything mid-session — the tutor answers and resumes where you left off |
+| 💾 **Session Memory** | Full progress saved per-repo. Pick up exactly where you left off |
+| 📊 **Progress Tracking** | % complete, blockers, quiz history, session log — all in plain markdown |
+| 🔀 **Multi-Repo** | Study multiple repos simultaneously, each with its own progress folder |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [Claude Code](https://claude.ai/code) installed (VS Code extension or CLI)
+- A Claude account (Pro or above recommended)
+
+### Installation
+
+```bash
+# Clone the repo
+git clone https://github.com/your-username/repo-tutor-agent
+cd repo-tutor-agent
+```
+
+That's it. No dependencies. No npm install. No config files.
+
+### Usage
+
+Open Claude Code in the project directory and type:
+
+```
+learning https://github.com/owner/repo
+```
+
+The agent does everything else.
+
+---
+
+## 🎬 What Happens During a Session
+
+```
+You: learning https://github.com/rtk-ai/rtk
+
+Agent: [analyzes repo structure and key files]
+       [creates a 7-module learning path]
+
+       RTK is a CLI tool that reduces token consumption by 60-90%
+       when working with AI coding assistants. ~90 min to learn fully.
+
+       What language should I explain things in?
+
+You: Russian
+
+Agent: Отлично! How would you rate your experience level?
+       (beginner / intermediate / advanced)
+
+You: intermediate
+
+Agent: Got it. Let's start with Module 1 — What RTK Does and Why It Exists.
+
+       [explains concept with real-world analogy]
+       [references specific files with line numbers]
+
+       Does this make sense so far? Quick question to check:
+       In what scenario would rtk replace a standard `cat` command?
+
+You: When you want to read a file but filter out noise for the AI context?
+
+Agent: ✅ Exactly right. Progress: 1/7 concepts (14%)
+       Moving to Module 2 — The 6-Phase Command Lifecycle...
+
+You: стоп
+
+Agent: [saves all progress to .tutor/repos/rtk-ai--rtk/]
+
+       🎯 Session 1 complete
+       ⏱️ Time: ~23 minutes
+       ✅ Learned: Purpose & motivation, Command lifecycle
+       📈 Progress: 2/7 concepts (28%)
+       👉 Next time: We'll look at src/filter.rs and the 12 compression strategies
+```
+
+---
+
+## 🗂️ How Progress Is Stored
+
+All state is saved in plain markdown files — human-readable, version-controllable, no database needed.
 
 ```
 .tutor/
-├── user_profile.md                          # GLOBAL — shared across all repos
+├── user_profile.md              ← your language, level, style (global, set once)
 └── repos/
-    └── {owner}--{repo-name}/                # One folder per repo
-        ├── learning_path.md                 # Full concept breakdown
-        ├── progress.md                      # Where you are in the learning path
-        ├── blockers.md                      # Concepts you struggled with
-        ├── quiz_results.md                  # Quiz attempt history
-        ├── repo_summary.md                  # User-friendly concept summaries
-        ├── session_summary.md               # Summary of last session for resumption
-        └── session_log.md                   # Session history table
+    ├── rtk-ai--rtk/
+    │   ├── learning_path.md     ← generated concept map for this repo
+    │   ├── progress.md          ← what you've completed, current position
+    │   ├── blockers.md          ← concepts that gave you trouble
+    │   ├── quiz_results.md      ← full quiz history
+    │   ├── repo_summary.md      ← your understanding in your own words
+    │   ├── session_summary.md   ← last session recap for resumption
+    │   └── session_log.md       ← all sessions history
+    └── anthropics--claude-code/
+        └── ...                  ← separate progress for each repo
 ```
 
-| File | Location | Purpose |
-|---|---|---|
-| `user_profile.md` | `.tutor/` (global) | Your language, level, and known concepts — shared across all repos |
-| `learning_path.md` | `.tutor/repos/{owner}--{repo}/` | Full concept breakdown of this repo |
-| `progress.md` | `.tutor/repos/{owner}--{repo}/` | Where you are in the learning path |
-| `session_summary.md` | `.tutor/repos/{owner}--{repo}/` | Summary of your last session for seamless resumption |
-| `blockers.md` | `.tutor/repos/{owner}--{repo}/` | Concepts you struggled with |
-| `quiz_results.md` | `.tutor/repos/{owner}--{repo}/` | Quiz attempt history |
-| `repo_summary.md` | `.tutor/repos/{owner}--{repo}/` | User-friendly concept summaries |
-| `session_log.md` | `.tutor/repos/{owner}--{repo}/` | Session history table |
+> **Your profile is set once** and shared across all repos. Switching repos doesn't reset your language or level.
 
-## Great repos to try this with
+---
 
-- [awesome-claude-code](https://github.com/anthropics/awesome-claude-code) — curated tools and extensions
-- Cursor rules collections — prompt engineering patterns
-- MCP server repos — tool-use and server architecture
-- [LangGraph](https://github.com/langchain-ai/langgraph) / [CrewAI](https://github.com/crewAIInc/crewAI) — multi-agent frameworks
-- Token-saving utilities — context window optimization tricks
+## 🏗️ Architecture
 
-## Contributing
+The agent is built as a multi-agent system inside Claude Code:
 
-Found a bug or have an idea? Open an issue or submit a PR. Keep changes focused and well-described.
+```
+CLAUDE.md (orchestrator)
+│
+├── agent: repo-analyzer      — reads repo, builds learning_path.md
+├── agent: onboarding         — collects user profile (runs once ever)
+├── agent: tutor              — delivers step-by-step explanations
+├── agent: quiz-master        — verifies understanding after each concept
+├── agent: difficulty-adjuster — re-explains when quiz fails (5 strategies)
+├── agent: qa-agent           — handles spontaneous questions mid-session
+├── agent: context-summarizer — saves all state at session end
+└── agent: session-manager    — handles resumption, switching, timeouts
 
-## License
+hooks/
+└── stop.sh                   — auto-saves progress on session end
 
-MIT
+skills/
+├── skill-read-repo           — how to navigate a repo efficiently
+├── skill-explain-by-level    — adapts depth to beginner/intermediate/advanced
+├── skill-create-analogy      — generates non-tech analogies for any concept
+├── skill-generate-quiz       — creates understanding-based questions (not recall)
+├── skill-multilingual        — keeps technical terms EN, explanations in user lang
+├── skill-track-metrics       — calculates and displays progress stats
+└── skill-write-progress      — standardized format for all progress files
+```
+
+---
+
+## 🔥 Great Repos To Learn With
+
+| Repo | What You'll Learn |
+|---|---|
+| [rtk-ai/rtk](https://github.com/rtk-ai/rtk) | Token optimization, CLI proxy patterns, Rust architecture |
+| [anthropics/claude-code](https://github.com/anthropics/claude-code) | Agent harnesses, hooks, skills, subagents |
+| [langchain-ai/langgraph](https://github.com/langchain-ai/langgraph) | Graph-based agent orchestration |
+| [crewAIInc/crewAI](https://github.com/crewAIInc/crewAI) | Multi-agent collaboration patterns |
+| [VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents) | Subagent design patterns |
+| Any `.cursorrules` collection | Prompt engineering for AI editors |
+| Any MCP server repo | Tool-use and server architecture |
+
+---
+
+## 💡 Tips
+
+**Resume a session:**
+```
+learning https://github.com/owner/repo
+```
+The agent detects your existing progress and picks up where you left off.
+
+**Switch to a different repo:**
+```
+learning https://github.com/other-owner/other-repo
+```
+Current progress is saved automatically. Come back to the first repo anytime.
+
+**Ask questions mid-session:**
+```
+Why is this function using lazy_static here?
+Show me where this pattern is used in the codebase
+What would happen if I removed this filter?
+```
+The tutor pauses, answers, then resumes exactly where you left off.
+
+**End a session:**
+```
+стоп / stop / bye / hasta mañana / 再见
+```
+All progress is saved before the agent says goodbye.
+
+---
+
+## 🤝 Contributing
+
+Contributions welcome. Keep them focused:
+
+- **New skills** — add to `.claude/skills/` following the existing format
+- **New analogy examples** — extend `skill-create-analogy.md`
+- **Bug reports** — open an issue with the repo URL that triggered it
+- **Language improvements** — PRs for multilingual edge cases appreciated
+
+Please test any changes with at least one real repo before submitting.
+
+---
+
+## 📄 License
+
+MIT — do whatever you want with it.
+
+---
+
+<div align="center">
+
+Built with [Claude Code](https://claude.ai/code) · Made for developers who want to actually understand what they're using
+
+</div>
