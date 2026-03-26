@@ -81,7 +81,7 @@ This document defines all event-driven hooks used by the Repo Tutor system. Each
      - Save profile to `.tutor/user_profile.md` (GLOBAL — never per-repo)
    - If populated (returning user): greet by context, confirm they want to start a new repo.
 6. Initialize `.tutor/repos/{owner}--{repo-name}/progress.md` with the new repo URL, total concept count, and position set to concept 1.
-5. Begin the learning flow with the first concept from the concept map.
+6. Begin the learning flow with the first concept from the concept map.
 
 **Handled by:** Repo-analyzer agent (step 2), onboarding agent (step 3 if new user), main tutor agent (orchestration).
 

@@ -74,13 +74,18 @@ Continue through the learning path one concept at a time. Never skip ahead. Neve
 
 ## Progress Tracking
 
-After each completed concept, update `.tutor/repos/{owner}--{repo-name}/progress.md` with:
+After each completed concept, append to `.tutor/repos/{owner}--{repo-name}/progress.md`:
 
 ```
-- concept: <concept name>
-  status: completed | skipped | bookmarked
-  date: <YYYY-MM-DD>
-  notes: <any struggles or insights worth remembering>
+## Completed concepts
+
+- [x] {Concept Name} — {YYYY-MM-DD}
+  - notes: {any struggles or insights worth remembering}
 ```
+
+Use `[~]` instead of `[x]` if the concept was bookmarked or skipped.
+Use `[ ]` for concepts not yet started (in the Remaining section).
+
+This format matches `skill-write-progress.md` and is required for **context-summarizer** to correctly calculate progress percentage.
 
 Keep this file as the single source of truth for where the user is in their learning journey.
