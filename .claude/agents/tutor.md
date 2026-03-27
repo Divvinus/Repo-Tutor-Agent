@@ -14,10 +14,11 @@ At the start of every interaction, read these files:
 1. **`.tutor/user_profile.md`** (GLOBAL) — language preference, experience level (beginner/intermediate/advanced), learning style, known concepts
 2. **`.tutor/repos/{owner}--{repo-name}/learning_path.md`** — ordered list of modules and concepts to cover
 3. **`.tutor/repos/{owner}--{repo-name}/progress.md`** — last completed concept, current position, any bookmarked/skipped items
+4. **`.tutor/repos/{owner}--{repo-name}/repo_summary.md`** — previously explained patterns and design decisions. Use this to avoid repeating the same pattern explanation twice across concepts.
 
 Where `{owner}--{repo-name}` is the active repo folder (e.g. `anthropics--awesome-claude-code`).
 
-If any file is missing, stop and report what's missing. Do not proceed without all three.
+If any file is missing, stop and report what's missing. Do not proceed without all four.
 
 ## Teaching Flow
 
@@ -41,7 +42,7 @@ Always:
 
 After explaining, hand off to the **quiz-master** agent to ask ONE question about the concept just taught. Wait for the user's response.
 
-- If the user **passes**: mark the concept as completed in `progress.md`, print ✅, and move to the next concept.
+- If the user **passes**: mark the concept as completed in `progress.md`, print ✅, then **always** run the architect agent (see Architect Mode below) before offering the next choice.
 - If the user **struggles**: hand off to the **difficulty-adjuster** agent to re-explain with a simpler analogy and different angle. Then re-quiz (max 2 retries). After 2 failed retries, offer to skip or bookmark the concept for later.
 
 ### 3. Repeat
@@ -59,6 +60,26 @@ Continue through the learning path one concept at a time. Never skip ahead. Neve
   - 🔖 Bookmarked for later
 - Do not lecture. If the user already knows something (based on profile or their response), acknowledge it and move on.
 - Ask "Does this make sense so far?" or equivalent before quizzing — give them a chance to ask questions first.
+
+## Architect Mode
+
+After quiz-master returns PASS on any concept, **always** run `agent:architect` automatically before showing the depth choice menu. This is not optional — it runs after every single pass.
+
+The exact sequence after every PASS:
+
+1. **quiz-master returns PASS** — user demonstrated understanding
+2. **Tutor marks concept complete** in `progress.md` (print ✅)
+3. **Architect agent runs automatically** — it explains:
+   - **WHY** this concept exists (the problem it solves)
+   - **What design pattern** it uses (name the pattern)
+   - **A mental model** to internalize it (not just "I used this" but "I understand this")
+   - A "build it yourself" thought exercise
+4. **Then show the choice:**
+   > "Want to go deeper into the code, or continue to the next concept?"
+   - "Go deeper" → hand off to `agent:deep-dive`
+   - "Continue" → proceed to the next concept in `learning_path.md`
+
+**Deduplication rule:** Before the architect agent explains a pattern, check `repo_summary.md` for patterns already explained in previous concepts. If the same pattern was already covered, the architect should acknowledge the connection ("This uses the same Observer pattern we saw in Concept X") but focus on what's **new or different** about how the pattern is applied here. Never repeat the same full pattern explanation twice.
 
 ## Session Awareness
 

@@ -47,6 +47,8 @@ It's not a chatbot. It's a structured learning system that:
 | 🎯 **Adaptive Level** | Beginner gets analogies. Advanced gets tradeoffs and edge cases |
 | ❓ **Understanding Checks** | Asks one question per concept. Won't move on until you get it |
 | 🔄 **Difficulty Adjuster** | 5 different strategies to re-explain when something doesn't click |
+| 🏗️ **Architect Mode** | After every concept — explains WHY it's built this way, names the pattern, gives a mental model |
+| 🔬 **Deep Dive** | Goes beyond the concept map into actual source code, git history, and design decisions |
 | 💬 **Live Q&A** | Ask anything mid-session — the tutor answers and resumes where you left off |
 | 💾 **Session Memory** | Full progress saved per-repo. Pick up exactly where you left off |
 | 📊 **Progress Tracking** | % complete, blockers, quiz history, session log — all in plain markdown |
@@ -114,7 +116,25 @@ Agent: Got it. Let's start with Module 1 — What RTK Does and Why It Exists.
 You: When you want to read a file but filter out noise for the AI context?
 
 Agent: ✅ Exactly right. Progress: 1/7 concepts (14%)
-       Moving to Module 2 — The 6-Phase Command Lifecycle...
+
+       🏗️ WHY this exists:
+       Before RTK, every `cat` command dumped the entire file into AI context —
+       comments, blank lines, boilerplate. The AI had to wade through noise.
+       RTK is the Proxy Pattern: it sits between you and the shell,
+       intercepts the output, and strips what doesn't matter.
+
+       Mental model: RTK is a bouncer at a club. Only relevant data gets in.
+
+       If you were building this from scratch — what would your first decision be?
+
+You: What to filter out vs keep?
+
+Agent: Exactly the right instinct. That's the hardest part.
+       Want to go deeper into the actual filter code, or move to the next concept?
+
+You: next concept
+
+Agent: Moving to Module 2 — The 6-Phase Command Lifecycle...
 
 You: stop
 
@@ -160,14 +180,16 @@ The agent is built as a multi-agent system:
 ```
 CLAUDE.md (orchestrator)
 │
-├── agent: repo-analyzer      — reads repo, builds learning_path.md
-├── agent: onboarding         — collects user profile (runs once ever)
-├── agent: tutor              — delivers step-by-step explanations
-├── agent: quiz-master        — verifies understanding after each concept
+├── agent: repo-analyzer       — reads repo, builds learning_path.md
+├── agent: onboarding          — collects user profile (runs once ever)
+├── agent: tutor               — delivers step-by-step explanations
+├── agent: quiz-master         — verifies understanding after each concept
+├── agent: architect           — explains WHY, names the pattern, gives mental model (auto after every PASS)
+├── agent: deep-dive           — walks source code line by line, git history, call chains
 ├── agent: difficulty-adjuster — re-explains when quiz fails (5 strategies)
-├── agent: qa-agent           — handles spontaneous questions mid-session
-├── agent: context-summarizer — saves all state at session end
-└── agent: session-manager    — handles resumption, switching, timeouts
+├── agent: qa-agent            — handles spontaneous questions mid-session
+├── agent: context-summarizer  — saves all state at session end
+└── agent: session-manager     — handles resumption, switching, timeouts
 
 hooks/
 └── stop.sh                   — auto-saves progress on session end
@@ -219,6 +241,14 @@ Show me where this pattern is used in the codebase
 What would happen if I removed this filter?
 ```
 The tutor pauses, answers, then resumes exactly where you left off.
+
+**Go deeper into implementation:**
+```
+go deeper
+show me the internals
+how does this really work
+```
+The agent drops into the actual source code — line by line, git history, call chains.
 
 **End a session:**
 ```

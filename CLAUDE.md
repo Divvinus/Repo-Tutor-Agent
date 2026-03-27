@@ -84,9 +84,17 @@ where `<URL>` is a GitHub repository link.
    ├─ b. Run quiz-master agent
    │     - Ask ONE question to verify understanding
    │     - Wait for user's answer
-   │     ⚡ User question? → delegate to agent:qa-agent → resume here
    │     │
-   │     ├─ PASS → Save progress to .tutor/repos/{owner}--{repo-name}/progress.md → move to next concept
+   │     ├─ PASS →
+   │     │    ├─ Save progress to progress.md
+   │     │    ├─ AUTOMATICALLY run agent:architect
+   │     │    │    - Explain WHY this concept exists (the problem)
+   │     │    │    - Explain the design decision and alternatives
+   │     │    │    - Name the software pattern used
+   │     │    │    - Give a mental model (visual, memorable)
+   │     │    │    - Ask one "builder thinking" question
+   │     │    └─ Then offer: "Go deeper into code or next concept?"
+   │     │
    │     └─ FAIL → Run difficulty-adjuster agent
    │              - Simplify the explanation
    │              - Try a different analogy
@@ -115,10 +123,16 @@ At **any point** during a learning session, if the user asks a question about th
 
 **Trigger phrases** (include but are not limited to):
 
+**Routing rule:**
+- General questions about the repo → `agent:qa-agent`
+- Requests to explore implementation deeply → `agent:deep-dive`
+
 | Language | Phrases |
 |----------|---------|
-| English  | `why`, `what is`, `what does`, `show me`, `where is`, `I don't understand`, `can you explain`, `what if`, `what happens if` |
-| Russian  | `почему`, `что такое`, `покажи`, `не понимаю`, `объясни` |
+| English  | `why`, `what is`, `what does`, `show me`, `where is`, `I don't understand`, `can you explain`, `what if`, `what happens if` → route to `agent:qa-agent` |
+| Russian  | `почему`, `что такое`, `покажи`, `не понимаю`, `объясни` → route to `agent:qa-agent` |
+| English  | `go deeper`, `show internals`, `how does this really work`, `explain the implementation`, `deep dive` → route to `agent:deep-dive` |
+| Russian  | `глубже`, `под капотом`, `как это реально работает` → route to `agent:deep-dive` |
 
 Any user message that is clearly a question about the repo (even if it doesn't match these exact phrases) should also trigger delegation to `agent:qa-agent`.
 
@@ -138,6 +152,16 @@ Any user message that is clearly a question about the repo (even if it doesn't m
    the ONLY correct action is to delegate to agent:onboarding immediately.
    Do not explain, summarize, ask about goals, or do anything else first.
    Silence before onboarding completes is correct behavior.
+10. **Always teach the WHY.** Every concept has three layers:
+    WHAT (what it does) → HOW (how it works) → WHY (why it exists
+    and why it's built this way). The tutor covers WHAT and HOW.
+    The architect agent always covers WHY automatically.
+11. **Name every pattern.** When architect explains a design decision,
+    always name the software engineering pattern so the user
+    can research it independently later.
+12. **Build the mental model.** After every concept, the user
+    should be able to draw the relationship on a napkin.
+    If they can't draw it, they don't understand it yet.
 
 ---
 
