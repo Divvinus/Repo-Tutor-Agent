@@ -53,6 +53,7 @@ It's not a chatbot. It's a structured learning system that:
 | 💾 **Session Memory** | Full progress saved per-repo. Pick up exactly where you left off |
 | 📊 **Progress Tracking** | % complete, blockers, quiz history, session log — all in plain markdown |
 | 🔀 **Multi-Repo** | Study multiple repos simultaneously, each with its own progress folder |
+| 🔎 **Repo Comparator** | Finds 3 similar repos and compares them — shallow (README) or deep (parallel code analysis) |
 
 ---
 
@@ -180,16 +181,19 @@ The agent is built as a multi-agent system:
 ```
 CLAUDE.md (orchestrator)
 │
-├── agent: repo-analyzer       — reads repo, builds learning_path.md
-├── agent: onboarding          — collects user profile (runs once ever)
-├── agent: tutor               — delivers step-by-step explanations
-├── agent: quiz-master         — verifies understanding after each concept
-├── agent: architect           — explains WHY, names the pattern, gives mental model (auto after every PASS)
-├── agent: deep-dive           — walks source code line by line, git history, call chains
-├── agent: difficulty-adjuster — re-explains when quiz fails (5 strategies)
-├── agent: qa-agent            — handles spontaneous questions mid-session
-├── agent: context-summarizer  — saves all state at session end
-└── agent: session-manager     — handles resumption, switching, timeouts
+├── agent: repo-analyzer          — reads repo, builds learning_path.md
+├── agent: onboarding             — collects user profile (runs once ever)
+├── agent: tutor                  — delivers step-by-step explanations
+├── agent: quiz-master            — verifies understanding after each concept
+├── agent: architect              — explains WHY, names the pattern, gives mental model (auto after every PASS)
+├── agent: deep-dive              — walks source code line by line, git history, call chains
+├── agent: difficulty-adjuster    — re-explains when quiz fails (5 strategies)
+├── agent: qa-agent               — handles spontaneous questions mid-session
+├── agent: context-summarizer     — saves all state at session end
+├── agent: session-manager        — handles resumption, switching, timeouts
+├── agent: repo-comparator        — finds 3 similar repos, orchestrates comparison flow
+├── agent: deep-repo-analyzer     — analyzes ONE repo deeply (runs x3 in parallel)
+└── agent: comparison-aggregator  — collects parallel results, builds comparison table + builder insights
 
 hooks/
 └── stop.sh                   — auto-saves progress on session end
@@ -249,6 +253,13 @@ show me the internals
 how does this really work
 ```
 The agent drops into the actual source code — line by line, git history, call chains.
+
+**Compare with similar repos:**
+```
+compare with similar repos
+сравни с похожими
+```
+The agent finds 3 repos solving the same problem. Choose shallow (5 min, README-based) or deep (15 min, real code analyzed in parallel). Get a comparison table, architectural breakdown, and builder insights — what you'd steal from each.
 
 **End a session:**
 ```

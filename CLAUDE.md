@@ -31,7 +31,7 @@ where `<URL>` is a GitHub repository link.
         ├── progress.md                      # Completed concepts, current position
         ├── blockers.md                      # Concepts the user struggled with
         ├── quiz_results.md                  # Quiz attempt history
-        ├── repo_summary.md                  # User-friendly concept summaries
+        ├── repo_summary.md                  # Concept summaries + pattern library + repo comparisons
         ├── session_summary.md               # Summary of last session for resumption
         └── session_log.md                   # Session history table
 ```
@@ -126,6 +126,7 @@ At **any point** during a learning session, if the user asks a question about th
 **Routing rule:**
 - General questions about the repo → `agent:qa-agent`
 - Requests to explore implementation deeply → `agent:deep-dive`
+- Requests to compare with similar repos → `agent:repo-comparator`
 
 | Language | Phrases |
 |----------|---------|
@@ -133,6 +134,10 @@ At **any point** during a learning session, if the user asks a question about th
 | Russian  | `почему`, `что такое`, `покажи`, `не понимаю`, `объясни` → route to `agent:qa-agent` |
 | English  | `go deeper`, `show internals`, `how does this really work`, `explain the implementation`, `deep dive` → route to `agent:deep-dive` |
 | Russian  | `глубже`, `под капотом`, `как это реально работает` → route to `agent:deep-dive` |
+| English  | `compare with similar`, `show alternatives`, `how else`, `other repos` → route to `agent:repo-comparator` |
+| Russian  | `сравни с похожими`, `похожие репозитории`, `как другие решили` → route to `agent:repo-comparator` |
+
+**Note:** `agent:repo-comparator` is NOT a parallel interrupt handler. It runs as a standalone flow, separate from the tutor loop. After comparison is complete, the user returns to the learning path.
 
 Any user message that is clearly a question about the repo (even if it doesn't match these exact phrases) should also trigger delegation to `agent:qa-agent`.
 
