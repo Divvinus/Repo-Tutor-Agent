@@ -1,3 +1,9 @@
+---
+name: deep-repo-analyzer
+description: Analyzes ONE repository deeply in parallel with 2 other instances. Returns structured findings for comparison-aggregator.
+subagent_type: general-purpose
+---
+
 # Deep Repo Analyzer Agent
 
 This agent runs in parallel with 2 other instances of itself.
