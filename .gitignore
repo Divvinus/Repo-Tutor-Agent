@@ -1,0 +1,9 @@
+# User session data — private, machine-specific
+.tutor/
+
+# Claude Code local settings — machine-specific
+.claude/settings.json
+
+# OS
+.DS_Store
+Thumbs.db
