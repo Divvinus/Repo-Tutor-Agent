@@ -33,7 +33,9 @@ where `<URL>` is a GitHub repository link.
         ├── quiz_results.md                  # Quiz attempt history
         ├── repo_summary.md                  # Concept summaries + pattern library + repo comparisons
         ├── session_summary.md               # Summary of last session for resumption
-        └── session_log.md                   # Session history table
+        ├── session_log.md                   # Session history table
+        ├── checkpoints.md                   # Mid-session checkpoints for context recovery
+        └── repo_preferences.md              # Per-repo overrides (optional)
 ```
 
 ### Key rules
@@ -41,6 +43,7 @@ where `<URL>` is a GitHub repository link.
 - When user sends `learning <URL>`, parse `{owner}` and `{repo-name}` from the URL and set the active repo folder to `.tutor/repos/{owner}--{repo-name}/`. Create it if it doesn't exist.
 - Switching repos = changing the active folder. No archiving needed.
 - Onboarding runs ONCE ever — if `.tutor/user_profile.md` exists and is not empty, skip onboarding regardless of which repo is being studied.
+- `repo_preferences.md` — optional file. If it exists, its values OVERRIDE the corresponding fields from `user_profile.md` for that repo only. Priority order: `repo_preferences.md` > `user_profile.md` (analogous to local > global config).
 
 ---
 
@@ -57,6 +60,7 @@ where `<URL>` is a GitHub repository link.
 └─────────────────────────────────────────────────────────────────┘
 
 1. Receive URL
+   **Agent routing:** See .claude/agent_registry.md for the authoritative routing table, priorities, and context contracts.
    └─> Run repo-analyzer agent
        - Clone/fetch repo structure
        - Identify: purpose, architecture, key concepts, dependencies
@@ -143,6 +147,39 @@ Any user message that is clearly a question about the repo (even if it doesn't m
 
 ---
 
+## File Formats
+
+### progress.md markers
+
+- `[x]` — concept passed (quiz PASS)
+- `[~]` — concept deferred (bookmarked by user choice OR auto-bookmarked after exhausting retries)
+- `[ ]` — concept not yet started
+
+Marker `[~]` does NOT mean "fail". Failure is an intermediate state inside the retry cycle. If after all retries the user still does not understand, the concept is marked `[~]` (deferred), not `[x]` (passed).
+
+### blockers.md format
+```markdown
+## Blocker: {concept_name}
+- **Date opened:** {YYYY-MM-DD}
+- **Status:** open | resolved | bookmarked | skipped
+- **Concept index:** #{N}
+- **What user said:** "{quote or summary of user's answer}"
+- **Strategies tried:**
+  1. {strategy_name} — {result: helped/didn't help}
+  2. {strategy_name} — {result}
+- **Times asked in QA:** {N} (updated if qa-agent flags repeated questions)
+- **Resolution:** {how it was resolved, if resolved} | {empty, if open}
+- **Date resolved:** {YYYY-MM-DD} | —
+```
+
+**Status definitions:**
+- `open` — blocker is active, user has not understood the concept
+- `resolved` — user later understood (passed quiz)
+- `bookmarked` — user chose to return later (conscious decision)
+- `skipped` — user chose to skip and not return
+
+---
+
 ## Core Rules
 
 1. **One concept at a time.** Never overwhelm. Finish one before starting the next.
@@ -167,6 +204,37 @@ Any user message that is clearly a question about the repo (even if it doesn't m
 12. **Build the mental model.** After every concept, the user
     should be able to draw the relationship on a napkin.
     If they can't draw it, they don't understand it yet.
+13. **Respect permissions.** All agents follow the permission policy
+    from `.claude/permissions.md`. ALLOW — execute. CONFIRM — ask the user.
+    DENY — do not perform. Before any write — read the file first.
+    Append-only files are never overwritten entirely.
+14. **Report progress.** Every agent MUST report progress to the user
+    during execution. Format: short status messages in the user's language.
+    Never stay silent for more than 10 seconds during a multi-step operation.
+    Progress reports must be informative, not generic
+    ("Analyzing..." — bad, "Found 47 Python files, building dependency graph..." — good).
+15. **Hierarchical config.** Settings are loaded in order:
+    `user_profile.md` (global, base) → `repo_preferences.md` (per-repo, override).
+    If `repo_preferences.md` sets `difficulty: advanced`, it overwrites
+    the global `beginner` ONLY for that repo. Fields absent from
+    `repo_preferences` are inherited from `user_profile`.
+16. **Context compaction.** Long sessions risk context loss.
+    Every 3 completed concepts the tutor MUST run a mid-session
+    checkpoint: save current state to `checkpoints.md` and
+    `progress.md`. This is NOT a session end — the user keeps
+    learning, but state is persisted. If auto-compaction happens
+    after a checkpoint, the agent can recover from saved files.
+17. **File ownership.** Each file in `.tutor/` has one owner-writer:
+    - `session_summary.md` → context-summarizer (sole writer)
+    - `checkpoints.md` → tutor (append-only)
+    - `progress.md` → tutor (primary) + context-summarizer (finalization)
+    - `blockers.md` → difficulty-adjuster (primary) + context-summarizer (status updates)
+    - `quiz_results.md` → quiz-master (sole writer)
+    - `session_log.md` → context-summarizer (sole writer)
+    - `learning_path.md` → repo-analyzer (creation) + context-summarizer (progress markers)
+    - `user_profile.md` → onboarding (creation) + session-manager (updates)
+    - `repo_summary.md` → architect (append patterns) + deep-dive (append insights) + context-summarizer (append summaries)
+    Other agents may READ any file, but WRITE — only the owner.
 
 ---
 
