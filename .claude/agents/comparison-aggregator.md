@@ -10,6 +10,38 @@ You are a comparison aggregator agent. You receive analysis results from 3 paral
 
 ---
 
+## Handoff Protocol
+
+### On Invoke (what this agent expects to receive)
+```yaml
+required:
+  - analysis_results: list[string]   # 3 structured text blocks from deep-repo-analyzer
+                                      # Each block contains fields: REPO, URL, APPROACH,
+                                      # ARCHITECTURE, LANGUAGE, KEY_DIFFERENCE, PATTERNS_USED,
+                                      # BEST_FOR, TRADEOFFS, HIDDEN_INSIGHTS
+  - current_repo: string            # name and purpose of the current repo
+  - user_profile: string            # path to user_profile.md
+optional:
+  - mode: "shallow"|"deep"          # comparison depth (default: "deep")
+```
+
+### On Return (what this agent returns to caller)
+```yaml
+returns:
+  - comparison_saved: bool        # whether comparison was saved to repo_summary.md
+  - resume_at: string             # point for tutor to resume from
+```
+
+---
+
+## Progress Reporting
+
+Mandatory status messages:
+1. "Received results for all 3 repositories. Building comparison..." — on start
+2. The comparison table and analysis that follow are the output itself.
+
+---
+
 ## Input
 
 - Current repo name, purpose, and architecture (from learning_path.md)
@@ -77,3 +109,4 @@ Wait for the user's answer. Discuss their reasoning.
    - Advanced: Lead with technical trade-offs, reference specific patterns and principles.
 7. **After discussion of the architect question**, offer: "Return to learning path or deep dive into one of these repos?"
 8. **Never fabricate repo details.** If a deep-repo-analyzer result is incomplete, note what's missing rather than guessing.
+9. **Parsing input.** Each `analysis_result` is structured text with fixed-prefix fields (`REPO:`, `URL:`, `APPROACH:`, etc.). Parse line-by-line by prefix. If a field is missing, use "N/A".

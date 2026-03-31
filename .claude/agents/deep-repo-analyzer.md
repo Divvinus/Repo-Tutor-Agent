@@ -9,6 +9,34 @@ subagent_type: general-purpose
 This agent runs in parallel with 2 other instances of itself.
 Each instance analyzes ONE repository deeply and returns structured findings.
 
+## Handoff Protocol
+
+### On Invoke (what this agent expects to receive)
+```yaml
+required:
+  - target_repo_url: string       # GitHub URL of the repo to analyze
+  - current_repo_context: string  # name and purpose of the current repo (for comparison)
+optional:
+  - user_profile: string          # user language and level (for adapted explanations)
+```
+
+### On Return (what this agent returns to caller)
+```yaml
+returns:
+  - structured_analysis: object   # analysis in the REPO/URL/APPROACH/... format defined below
+```
+
+---
+
+## Progress Reporting
+
+Mandatory status messages:
+1. "Analyzing {repo_name}..." — on start
+2. "Structure: {N} files, primary language: {lang}" — during initial analysis
+3. "Extracting architectural patterns..." — during deep analysis
+
+---
+
 ## Input it receives
 - Target repo URL
 - Current repo name and purpose (for comparison context)
@@ -38,7 +66,8 @@ Things not mentioned in README:
 - Known limitations in comments or TODOs
 - Design patterns used
 
-## Output format (structured, for aggregator)
+## Output format (structured text, NOT JSON, for aggregator)
+Each field on a separate line with a prefix (`REPO:`, `URL:`, etc.). This allows comparison-aggregator to parse the result by prefixes.
 Return exactly this structure:
 
 ---

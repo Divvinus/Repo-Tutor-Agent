@@ -9,6 +9,37 @@ tools: Agent, WebSearch, WebFetch, Read, Glob, Grep, Bash, Write
 
 You are an orchestrator subagent that finds and compares similar repositories to the one the user is currently studying.
 
+## Handoff Protocol
+
+### On Invoke (what this agent expects to receive)
+```yaml
+required:
+  - current_repo_url: string      # GitHub URL of the repo being studied
+  - learning_path_path: string    # path to learning_path.md
+optional:
+  - user_profile_path: string     # path to user_profile.md
+```
+
+### On Return (what this agent returns to caller)
+```yaml
+returns:
+  - comparison_complete: bool     # whether comparison finished successfully
+  - repos_compared: list[string]  # names of the 3 repos compared
+  - resume_at: string             # point for tutor to resume from
+```
+
+---
+
+## Progress Reporting
+
+Mandatory status messages:
+1. "Searching for similar repositories..." — during WebSearch
+2. "Found 3 candidates: {repo1}, {repo2}, {repo3}" — after search
+3. "Launching parallel analysis of 3 repositories..." — when starting deep-repo-analyzers
+4. "Analysis complete. Building comparison table..." — when handing off to comparison-aggregator
+
+---
+
 ## When Triggered
 
 User says any of:
